@@ -49,19 +49,19 @@ function App() {
         <input
           value={loanAmount}
           onChange={(e) => setLoanAmount(e.target.value)}
-          placeholder="Enter Loan Amount (no commas)"
+          placeholder="Loan Amount (no commas)"
           type="text"
         />
         <input
           value={interestRate}
           onChange={(e) => setInterestRate(e.target.value)}
-          placeholder="Enter Interest Rate (decimal form)"
+          placeholder="Interest Rate (decimal form)"
           type="text"
         />
         <input
           value={terms}
           onChange={(e) => setTerms(e.target.value)}
-          placeholder="Enter Terms"
+          placeholder="Terms"
           type="text"
         />
         <button onClick={calculateMortgage}>Calculate</button>
