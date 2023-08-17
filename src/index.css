@@ -14,6 +14,8 @@ body {
 }
 
 .app-container {
+  width: 430px;
+  margin: 0 auto;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
   padding: 5px;
@@ -30,23 +32,33 @@ h1 {
   font-size: 24px;
 }
 
+.input-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
 input {
-  width: 90%;
+  width: 50%;
   padding: 10px;
   margin: 5px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 button {
-  padding: 10px 20px;
+  
+  padding: 8px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
+  width: 100px;
 }
 
 .result {
