@@ -55,7 +55,7 @@ function App() {
         <input
           value={interestRate}
           onChange={(e) => setInterestRate(e.target.value)}
-          placeholder="Interest Rate (decimal form)"
+          placeholder="Interest Rate (decimal)"
           type="text"
         />
         <input
