@@ -1,6 +1,6 @@
 {
   "homepage": "https://kyle-mucerino.github.io/mortgage-calc/",
-  "name": "my-app",
+  "name": "mortgage-calculator",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
