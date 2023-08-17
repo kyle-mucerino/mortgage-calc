@@ -14,7 +14,7 @@ body {
 }
 
 .app-container {
-  width: 430px;
+  width: 176%;
   margin: 0 auto;
   background-color: rgba(255, 255, 255, 0.8);
   border-radius: 10px;
@@ -58,10 +58,24 @@ button {
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
-  width: 100px;
+  width: auto;
 }
 
 .result {
   margin-top: 10px;
   font-size: 18px;
+}
+
+@media screen and (max-width: 480px) {
+  .app-container {
+    padding: 10px; 
+  }
+
+  input {
+    font-size: 12px; 
+  }
+
+  button {
+    font-size: 12px; 
+  }
 }
