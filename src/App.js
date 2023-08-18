@@ -3,17 +3,25 @@ import axios from "axios";
 import "./App.css"; 
 
 function App() {
-  const [loanAmount, setLoanAmount] = useState(""); 
-  const [interestRate, setInterestRate] = useState("");
-  const [terms, setTerms] = useState("");
-  const [monthlyPayment, setMonthlyPayment] = useState(null);
+  const [currentLoanAmount, setCurrentLoanAmount] = useState("");
+  const [currentInterestRate, setCurrentInterestRate] = useState("");
+  const [currentTerms, setCurrentTerms] = useState("");
+  const [currentMonthlyPayment, setCurrentMonthlyPayment] = useState(null);
+  const [newLoanAmount, setNewLoanAmount] = useState("");
+  const [newInterestRate, setNewInterestRate] = useState("");
+  const [newTerms, setNewTerms] = useState("");
+  const [newMonthlyPayment, setNewMonthlyPayment] = useState(null);
 
-  const calculateMortgage = async () => {
-    const parsedLoanAmount = parseFloat(loanAmount);
-    const parsedInterestRate = parseFloat(interestRate);
-    const parsedTerms = parseInt(terms);
+  const calculateCurrentMortgage = async () => {
+    const parsedCurrentLoanAmount = parseFloat(currentLoanAmount);
+    const parsedCurrentInterestRate = parseFloat(currentInterestRate);
+    const parsedCurrentTerms = parseInt(currentTerms);
 
-    if (isNaN(parsedLoanAmount) || isNaN(parsedInterestRate) || isNaN(parsedTerms)) {
+    if (
+      isNaN(parsedCurrentLoanAmount) ||
+      isNaN(parsedCurrentInterestRate) ||
+      isNaN(parsedCurrentTerms)
+    ) {
       console.error("Invalid input values");
     }
 
@@ -21,9 +29,9 @@ function App() {
       method: "GET",
       url: "https://mortgage-monthly-payment-calculator.p.rapidapi.com/revotek-finance/mortgage/monthly-payment",
       params: {
-        loanAmount: parsedLoanAmount,
-        interestRate: parsedInterestRate,
-        terms: parsedTerms
+        loanAmount: parsedCurrentLoanAmount,
+        interestRate: parsedCurrentInterestRate,
+        terms: parsedCurrentTerms
       },
       headers: {
         "X-RapidAPI-Key": "931562259emsh725cb21c9c42981p16a7c1jsn8b28145da88e",
@@ -34,42 +42,155 @@ function App() {
     try {
       const response = await axios.request(options);
       console.log(response);
-      setMonthlyPayment(response.data.monthlyPayment.toFixed());
+      setCurrentMonthlyPayment(response.data.monthlyPayment.toFixed());
     } catch (error) {
       console.error(error);
     }
   };
 
+  const calculateNewMortgage = async () => {
+    const parsedNewLoanAmount = parseFloat(newLoanAmount);
+    const parsedNewInterestRate = parseFloat(newInterestRate);
+    const parsedNewTerms = parseInt(newTerms);
+
+    if (
+      isNaN(parsedNewLoanAmount) ||
+      isNaN(parsedNewInterestRate) ||
+      isNaN(parsedNewTerms)
+    ) {
+      console.error("Invalid input values");
+    }
+
+    const options = {
+      method: "GET",
+      url: "https://mortgage-monthly-payment-calculator.p.rapidapi.com/revotek-finance/mortgage/monthly-payment",
+      params: {
+        loanAmount: parsedNewLoanAmount,
+        interestRate: parsedNewInterestRate,
+        terms: parsedNewTerms
+      },
+      headers: {
+        "X-RapidAPI-Key": "931562259emsh725cb21c9c42981p16a7c1jsn8b28145da88e",
+        "X-RapidAPI-Host": "mortgage-monthly-payment-calculator.p.rapidapi.com"
+      }
+    };
+
+    try {
+      const response = await axios.request(options);
+      console.log(response);
+      setNewMonthlyPayment(response.data.monthlyPayment.toFixed());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  function compareMortgages(
+    currentMonthlyPayment,
+    newMonthlyPayment,
+    currentTerms,
+    newTerms
+  ) {
+    const breakevenPoint =
+      currentMonthlyPayment - newMonthlyPayment !== 0
+        ? (currentTerms * 12 * currentMonthlyPayment) /
+          (currentMonthlyPayment - newMonthlyPayment)
+        : Infinity;
+    const breakevenYears = breakevenPoint / 12;
+
+    const currentTotalPayment = currentMonthlyPayment * currentTerms * 12;
+    const newTotalPayment = newMonthlyPayment * newTerms * 12;
+    const longTermSavings = currentTotalPayment - newTotalPayment;
+
+    const monthlySavings = currentMonthlyPayment - newMonthlyPayment;
+
+    return { breakevenYears, longTermSavings, monthlySavings };
+  }
+
+  const { breakevenYears, longTermSavings, monthlySavings } = compareMortgages(
+    currentMonthlyPayment,
+    newMonthlyPayment,
+    currentTerms,
+    newTerms
+  );
+
   return (
-    <div className="app-container">
-      <div className="input-container">
-        <h1>
-          <i>Mortgage Calculator</i>
-        </h1>
-        <input
-          value={loanAmount}
-          onChange={(e) => setLoanAmount(e.target.value)}
-          placeholder="Loan Amount (no commas)"
-          type="text"
-        />
-        <input
-          value={interestRate}
-          onChange={(e) => setInterestRate(e.target.value)}
-          placeholder="Interest Rate (decimal)"
-          type="text"
-        />
-        <input
-          value={terms}
-          onChange={(e) => setTerms(e.target.value)}
-          placeholder="Terms"
-          type="text"
-        />
-        <button onClick={calculateMortgage}>Calculate</button>
-        <div className="result">
-          Monthly Payment: <b>${monthlyPayment}</b>
+    <React.Fragment>
+      <div className="app-container">
+        <div className="current-input-container">
+          <div className="current">
+            <h1>
+              <i>Current Mortgage</i>
+            </h1>
+            <input
+              value={currentLoanAmount}
+              onChange={(e) => setCurrentLoanAmount(e.target.value)}
+              placeholder="Loan Amount (no commas)"
+              type="text"
+            />
+            <input
+              value={currentInterestRate}
+              onChange={(e) => setCurrentInterestRate(e.target.value)}
+              placeholder="Interest Rate (decimal)"
+              type="text"
+            />
+            <input
+              value={currentTerms}
+              onChange={(e) => setCurrentTerms(e.target.value)}
+              placeholder="Terms"
+              type="text"
+            />
+            <div className="button-container">
+              <button onClick={calculateCurrentMortgage}>Calculate</button>
+            </div>
+            <div className="result">
+              Monthly Payment: <b>${currentMonthlyPayment}</b>
+            </div>
+          </div>
+        </div>
+        <div className="new-input-container">
+          <div className="new">
+            <h1>
+              <i>New Mortgage</i>
+            </h1>
+            <input
+              value={newLoanAmount}
+              onChange={(e) => setNewLoanAmount(e.target.value)}
+              placeholder="Loan Amount (no commas)"
+              type="text"
+            />
+            <input
+              value={newInterestRate}
+              onChange={(e) => setNewInterestRate(e.target.value)}
+              placeholder="Interest Rate (decimal)"
+              type="text"
+            />
+            <input
+              value={newTerms}
+              onChange={(e) => setNewTerms(e.target.value)}
+              placeholder="Terms"
+              type="text"
+            />
+            <div className="button-container">
+              <button onClick={calculateNewMortgage}>Calculate</button>
+            </div>
+            <div className="result">
+              Monthly Payment: <b>${newMonthlyPayment}</b>
+            </div>
+          </div>
+        </div>
+        <div className="calculations">
+          <p>
+            <i>Breakeven Time:</i> <br></br><b>{breakevenYears.toFixed(2)} years</b>
+          </p>
+          <p>
+            <i>Long-Term-Savings:</i> <b>${longTermSavings.toFixed(2)}</b>
+          </p>
+          <p>
+            <i>Monthly Savings</i> <b>${monthlySavings.toFixed(2)}</b>
+          </p>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
 
