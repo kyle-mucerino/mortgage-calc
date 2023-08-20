@@ -92,13 +92,13 @@ function App() {
   ) {
     const breakevenPoint =
       currentMonthlyPayment - newMonthlyPayment !== 0
-        ? (currentTerms * 12 * currentMonthlyPayment) /
+        ? (currentTerms * currentMonthlyPayment) /
           (currentMonthlyPayment - newMonthlyPayment)
         : Infinity;
     const breakevenYears = breakevenPoint / 12;
 
-    const currentTotalPayment = currentMonthlyPayment * currentTerms * 12;
-    const newTotalPayment = newMonthlyPayment * newTerms * 12;
+    const currentTotalPayment = currentMonthlyPayment * currentTerms;
+    const newTotalPayment = newMonthlyPayment * newTerms;
     const longTermSavings = currentTotalPayment - newTotalPayment;
 
     const monthlySavings = currentMonthlyPayment - newMonthlyPayment;
